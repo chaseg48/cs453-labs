@@ -1,40 +1,7 @@
 # Lab 1 - TCP Command Server
 
-In this lab, you will extend a simple TCP echo server into a small command-based TCP server.
-
-The lecture example showed a basic client/server program where the client sends text and the server echoes the same text back. This lab builds on that idea by adding a simple command protocol.
-
-## Learning Goals
-
-By the end of this lab, you should be able to:
-
-* Explain the difference between a TCP client and a TCP server.
-* Run a TCP server and connect to it with a client.
-* Send and receive text over a socket.
-* Implement simple command parsing.
-* Use automated tests to check server command behavior.
-* Describe a small text-based protocol.
-
-## Starter Code Structure
-
-The starter code is located in:
-
-```
-labs/lab01-tcp-command/starter/
-```
-
-The starter project has this structure:
-
-```
-starter/
-├── package.json
-├── src/
-│   ├── client.js
-│   ├── commands.js
-│   └── server.js
-└── test/
-    └── commands.test.js
-```
+This lab implements a simple text-based TCP command client/server system. The client issues a command and the server
+responds accordlingly.
 
 ### File Descriptions
 
@@ -46,18 +13,14 @@ starter/
 | `test/commands.test.js` | Contains automated tests for the command-handling logic.                                    |
 | `package.json`          | Defines project metadata, dependencies, and npm scripts.                                    |
 
-## Required Features
+## Features
 
-1. The server must accept TCP client connections on a configurable port.
+1. The server accepts TCP client connections on a configurable port.
 2. The client must send one command at a time.
-3. The server must support `ECHO`, `UPPER`, `LOWER`, and `QUIT`.
-4. The server must return an error for unknown commands.
-5. The server must not crash when the client sends an empty line.
-6. The README must describe the protocol.
-
-### Graduate Students
-
-7. Implement `REVERSE` or `TIME` or add a new command and document it. 
+3. The server supports `ECHO`, `UPPER`, `LOWER`, `REVERSE`, `TIME`, and `QUIT`.
+4. The server returns an error for unknown commands.
+5. The server does not crash when the client sends an empty line.
+6. The README describes the protocol.
 
 ## Command Protocol
 
@@ -65,14 +28,22 @@ The server accepts one text command per line.
 
 Commands are case-insensitive, but the command arguments should be handled as normal text.
 
+1. `ECHO` The server echos the string back to the client without modification.
+2. `UPPER` The server converts the client string to all uppercase.
+3. `LOWER` The server converts the client string to all lowercase.
+4. `REVERSE` The server reverses the client string.
+5. `TIME` The server sends the current time in 12-hour format.
+
+## Command Examples
+
 | Client sends    | Server responds     |
 | --------------- | ------------------- |
 | `ECHO hello`    | `hello`             |
 | `UPPER hello`   | `HELLO`             |
 | `LOWER HELLO`   | `hello`             |
 | `REVERSE hello` | `olleh`             |
-| `TIME`          | current server time |
-| `QUIT`          | closes connection   |
+| `TIME`          | `12:00:00 PM`       |
+| `QUIT`          | `Goodbye.`          |
 | unknown command | error message       |
 
 ## Running the Lab
@@ -162,42 +133,29 @@ You may also run the tests in watch mode if supported by the starter project:
 npm run test:watch
 ```
 
-## Suggested Workflow
-
-1. Run the server and client before changing anything.
-2. Try the existing commands manually.
-3. Run the automated tests.
-4. Open `src/commands.js`.
-5. Implement one command at a time.
-6. Run `npm test` after each change.
-7. Once the tests pass, test manually with the client.
-8. Update this README to describe the final protocol.
-
 ## Reflection Questions
 
-Answer the following questions in your submission:
-
 1. What is the difference between the client and the server?
+
+The server program must be started before the client program so that it can begin listening on the known port that the
+clients will be trying to connect to. The server waits for a client to connect and creates a new socket for each new
+client connected.
+
+The client program can begin anytime after the server program. The client program implements an interface for the user
+to issue commands that the client will send to the server. The client creates a connection to the known server port.
+
 2. Why does the server need to keep running after handling one request?
+
+The server needs to keep running so that it can handle additional requests from the client and handle requests from
+potential other clients that are connected concurrently or will try to connect in the future.
+
 3. What happens if two clients connect at the same time?
+
+The two clients will have two different port addresses. The server will create a socket for each address and handle
+commands from each client separately.
+
 4. How is this different from HTTP?
 
-## Submission
-
-Submit your completed lab according to the course submission instructions.
-
-Your submission should include:
-
-* Your updated source code.
-* Your completed `commands.js`.
-* Your updated README protocol description.
-* Your answers to the reflection questions.
-* Any graduate extension work, if applicable.
-
-Before submitting, verify that:
-
-```
-npm test
-```
-
-runs successfully.
+HTTP defines the structure of requests and responses that will be (typically) sent over a TCP connection. In our lab,
+the command protocol we have defined (i.e, `ECHO`, `UPPER`, ... etc) and the server response to each of these commands 
+is analagous to HTTP. Port 80 is used for HTTP requests, while our server is running on port 3000 by default.

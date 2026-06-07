@@ -19,6 +19,10 @@ const rl = readline.createInterface({
 socket.on("data", (data) => {
   process.stdout.write(data);
 
+  if (String(data) == "Goodbye.\n") {
+    socket.destroy();
+  }
+
   if (!socket.destroyed) {
     rl.prompt();
   }
