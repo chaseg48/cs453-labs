@@ -148,10 +148,7 @@ export function resetState() {
     requestCount = 0;
 }
 
-console.log(import.meta.url.replace(/\//g, '\\'));
-console.log(`file:\\\\\\${process.argv[1]}`);
-
-if (import.meta.url.replace(/\//g, "\\") === `file:\\\\\\${process.argv[1]}`) {
+if (import.meta.url === `file://${process.argv[1]}`) {
     const port = process.env.PORT || DEFAULT_PORT;
     const server = createServer();
 
