@@ -1,40 +1,6 @@
 # Lab 2 - Hello HTTP + JSON
 
-In Lab 1, you worked directly with a TCP socket and created a small command-based server.
-
-In this lab, you will move up one layer and build a small HTTP JSON service. Instead of inventing your own command format, you will use HTTP methods, paths, status codes, headers, and JSON request/response bodies.
-
-## Learning Goals
-
-By the end of this lab, you should be able to:
-
-* Explain the difference between a raw TCP message and an HTTP request.
-* Create a basic HTTP server in Node.js.
-* Read the HTTP method and request path.
-* Parse a JSON request body.
-* Return JSON responses.
-* Use appropriate HTTP status codes.
-* Handle invalid or unexpected client input without crashing the server.
-* Test HTTP request-handling behavior.
-
-## Starter Code Structure
-
-The starter code is located in:
-
-```text
-labs/lab02-http-json/starter/
-```
-
-The starter project has this structure:
-
-```text
-starter/
-├── package.json
-├── src/
-│   └── server.js
-└── test/
-    └── server.test.js
-```
+This lab implements a basic HTTP service.
 
 ### File Descriptions
 
@@ -269,10 +235,28 @@ npm run test:watch
 Answer the following questions in your submission:
 
 1. What is the difference between a TCP message and an HTTP request?
+
+A TCP message is what carries the HTTP request across a network. HTTP defines the format of the request and the
+response.
+
 2. What does the `Content-Type: application/json` header tell the server?
+
+This field indicates to the server the data format of the request. In this case, we are telling the server that the
+format is JSON so that the server knows how to parse the request.
+
 3. Why should a server return different HTTP status codes for different situations?
+
+The server should return different status codes to give the client information about the outcome of the request. For
+example, returning a status code of 200 indicates a successfull operation while a code of 400 indicates an error.
+
 4. What happens if the client sends invalid JSON?
+
+If the client sends invalid JSON the server will return an error with the status header of 400.
+
 5. How is this lab different from Lab 1?
+
+This lab is different in that we are not defining our own message structure. We are using the request and response
+structure defined by HTTP.
 
 ## Graduate Students
 

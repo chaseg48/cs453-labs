@@ -9,7 +9,7 @@ export function sendJson(res, statusCode, body) {
         "Content-Type": "application/json"
     });
 
-    res.end(JSON.stringify(body));
+    res.end("\n" + JSON.stringify(body));
 }
 
 export function readJsonBody(req) {
@@ -38,18 +38,62 @@ export function readJsonBody(req) {
 }
 
 export function handleCalculate(body) {
-    // TODO: Validate that operation, a, and b are present.
-    // TODO: Validate that a and b are numbers.
-    // TODO: Support add, subtract, multiply, and divide.
-    // TODO: Return an error for unsupported operations.
-    // TODO: Return an error for division by zero.
-
-    return {
-        statusCode: 501,
-        response: {
-            error: "Calculation not implemented yet"
+    if (!isNaN(Number(body.a)) && !isNaN(Number(body.b))) {
+        switch (body.operation) {
+            case "add":
+            return {
+                statusCode: 200,
+                response: {
+                    result: body.a + body.b
+                }
+            };
+            case "subtract":
+            return {
+                statusCode: 200,
+                response: {
+                    result: body.a - body.b
+                }
+            };
+            case "multiply":
+            return {
+                statusCode: 200,
+                response: {
+                    result: body.a * body.b
+                }
+            };
+            case "divide":
+            if (Number(body.b) != 0) {
+                return {
+                    statusCode: 200,
+                    response: {
+                        result: body.a / body.b
+                    }
+                };
+            }
+            else {
+                return {
+                    statusCode: 400,
+                    response: {
+                        error: "Divide by zero"
+                    }
+                };
+            }
+            default:
+                return {
+                    statusCode: 400,
+                    response: {
+                        error: "Operation '" + String(body.operation) + "' not implemented"
+                    }
+                };
         }
-    };
+    } else {
+        return {
+            statusCode: 400,
+            response: {
+                error: "Operands must be numeric"
+            }
+        };
+    }
 }
 
 export async function requestHandler(req, res) {
@@ -64,8 +108,7 @@ export async function requestHandler(req, res) {
     }
 
     if (method === "GET" && url === "/requests") {
-        // TODO: Return the current request count as JSON.
-        sendJson(res, 501, { error: "Request counter not implemented yet" });
+        sendJson(res, 200, { count: requestCount });
         return;
     }
 
@@ -73,8 +116,7 @@ export async function requestHandler(req, res) {
         try {
             const body = await readJsonBody(req);
 
-            // TODO: Return the parsed JSON body back to the client.
-            sendJson(res, 501, { error: "Echo not implemented yet" });
+            sendJson(res, 200, body );
         } catch {
             sendJson(res, 400, { error: "Invalid JSON" });
         }
@@ -106,7 +148,10 @@ export function resetState() {
     requestCount = 0;
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+console.log(import.meta.url.replace(/\//g, '\\'));
+console.log(`file:\\\\\\${process.argv[1]}`);
+
+if (import.meta.url.replace(/\//g, "\\") === `file:\\\\\\${process.argv[1]}`) {
     const port = process.env.PORT || DEFAULT_PORT;
     const server = createServer();
 
