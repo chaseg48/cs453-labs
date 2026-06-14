@@ -112,6 +112,11 @@ export async function requestHandler(req, res) {
         return;
     }
 
+    if (method === "GET" && url === "/time") {
+        sendJson(res, 200, { time: new Date().toLocaleTimeString()});
+        return;
+    }
+
     if (method === "POST" && url === "/echo") {
         try {
             const body = await readJsonBody(req);

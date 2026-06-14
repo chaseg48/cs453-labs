@@ -1,6 +1,6 @@
 # Lab 2 - Hello HTTP + JSON
 
-This lab implements a basic HTTP service.
+This lab implements a basic HTTP service. The lab was developed on `Windows` and tested using `WSL` with `Ubuntu`.
 
 ### File Descriptions
 
@@ -10,10 +10,19 @@ This lab implements a basic HTTP service.
 | `test/server.test.js` | Contains automated tests for the HTTP JSON service.        |
 | `package.json`        | Defines project metadata, dependencies, and npm scripts.   |
 
-## Required Features
+## Features
 
-Your HTTP server must support the following routes.
+This HTTP server supports the following routes:
+1. `GET /health`: Return the status of the server.
+2. `POST /echo`: Echos the original request from the user back to the client.
+3. `POST /calculate`: Supports 4 basic arithmetic operations: `add`, `subtract`, `multiply`, `divide`.
 
+## Graduate Extension
+
+Graduate Only Functionality:
+4. `GET /time`: Returns the current local time of the server to the client.
+
+## Examples
 ### `GET /health`
 
 Returns a JSON response showing that the server is running.
@@ -23,6 +32,18 @@ Example response:
 ```json
 {
   "status": "ok"
+}
+```
+
+### `GET /time`
+
+Returns a JSON response with the current local time of the server in 12-hour format.
+
+Example response:
+
+```json
+{
+  "time": "12:00:00 PM"
 }
 ```
 
@@ -90,31 +111,6 @@ Example response:
   "count": 4
 }
 ```
-
-## Error Handling
-
-Your server should not crash when it receives bad input.
-
-At minimum, your server should handle:
-
-* Unknown routes.
-* Unsupported HTTP methods.
-* Invalid JSON.
-* Missing required fields.
-* Unsupported calculation operations.
-* Division by zero.
-
-Use reasonable HTTP status codes such as:
-
-| Status Code | Meaning               |
-| ----------- | --------------------- |
-| `200`       | OK                    |
-| `400`       | Bad request           |
-| `404`       | Not found             |
-| `405`       | Method not allowed    |
-| `500`       | Internal server error |
-
-Error responses should be returned as JSON.
 
 Example error response:
 
@@ -219,17 +215,6 @@ You may also run the tests in watch mode if supported by the starter project:
 npm run test:watch
 ```
 
-## Suggested Workflow
-
-1. Run the server before changing anything.
-2. Try `GET /health` manually in a browser or with `curl`.
-3. Run the automated tests.
-4. Open `src/server.js`.
-5. Implement one route at a time.
-6. Run `npm test` after each change.
-7. Test manually with `curl`.
-8. Update this README if your final behavior differs from the examples.
-
 ## Reflection Questions
 
 Answer the following questions in your submission:
@@ -257,38 +242,3 @@ If the client sends invalid JSON the server will return an error with the status
 
 This lab is different in that we are not defining our own message structure. We are using the request and response
 structure defined by HTTP.
-
-## Graduate Students
-
-Graduate students should complete one additional feature.
-
-Choose one of the following:
-
-1. Add a new route, such as `GET /time` or `POST /uppercase`.
-2. Add one additional calculation operation and document it.
-3. Improve the request counter so it tracks counts by route.
-4. Add additional automated tests for error handling.
-
-Document your graduate extension in your submission.
-
-## Submission
-
-Submit your completed lab according to the course submission instructions.
-
-Your submission should include:
-
-* Your updated source code.
-* Your completed HTTP JSON server.
-* Your updated README if you changed or extended the API.
-* Your answers to the reflection questions.
-* Any graduate extension work, if applicable.
-
-Before submitting, verify that:
-
-```bash
-npm test
-```
-
-runs successfully.
-
-Submit your GitHub link in the Canvas assignment for this lab.
