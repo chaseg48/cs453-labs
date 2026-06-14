@@ -20,6 +20,7 @@ This HTTP server supports the following routes:
 ## Graduate Extension
 
 Graduate Only Functionality:
+
 4. `GET /time`: Returns the current local time of the server to the client.
 
 ## Examples
@@ -88,17 +89,6 @@ Example response:
   "result": 5
 }
 ```
-
-Your server must support at least the following operations:
-
-| Operation  | Meaning               |
-| ---------- | --------------------- |
-| `add`      | Add `a` and `b`       |
-| `subtract` | Subtract `b` from `a` |
-| `multiply` | Multiply `a` and `b`  |
-| `divide`   | Divide `a` by `b`     |
-
-The server should return an error response for unsupported operations.
 
 ### `GET /requests`
 
@@ -174,7 +164,7 @@ curl -X POST http://localhost:3000/calculate \
 
 ## Configuring the Port
 
-The server should use port `3000` by default.
+The server uses port `3000` by default.
 
 You can run the server on a different port by setting the `PORT` environment variable:
 
@@ -198,26 +188,7 @@ Run the tests from the starter directory:
 npm test
 ```
 
-Some tests may fail when you first receive the starter code. Your job is to update the implementation until the required tests pass.
-
-The tests should check behavior such as:
-
-* `GET /health` returns a JSON status response.
-* `POST /echo` returns the submitted JSON data.
-* `POST /calculate` performs supported calculations.
-* Unknown routes return an error.
-* Invalid JSON returns an error.
-* The server does not crash on bad input.
-
-You may also run the tests in watch mode if supported by the starter project:
-
-```bash
-npm run test:watch
-```
-
 ## Reflection Questions
-
-Answer the following questions in your submission:
 
 1. What is the difference between a TCP message and an HTTP request?
 
