@@ -190,26 +190,26 @@ npm test
 
 ## Reflection Questions
 
-1. What is the difference between a TCP message and an HTTP request?
+#### 1. What is the difference between a TCP message and an HTTP request?
 
 A TCP message is what carries the HTTP request across a network. HTTP defines the format of the request and the
 response.
 
-2. What does the `Content-Type: application/json` header tell the server?
+#### 2. What does the `Content-Type: application/json` header tell the server?
 
 This field indicates to the server the data format of the request. In this case, we are telling the server that the
 format is JSON so that the server knows how to parse the request.
 
-3. Why should a server return different HTTP status codes for different situations?
+#### 3. Why should a server return different HTTP status codes for different situations?
 
 The server should return different status codes to give the client information about the outcome of the request. For
 example, returning a status code of 200 indicates a successfull operation while a code of 400 indicates an error.
 
-4. What happens if the client sends invalid JSON?
+#### 4. What happens if the client sends invalid JSON?
 
 If the client sends invalid JSON the server will return an error with the status header of 400.
 
-5. How is this lab different from Lab 1?
+#### 5. How is this lab different from Lab 1?
 
 This lab is different in that we are not defining our own message structure. We are using the request and response
 structure defined by HTTP.
