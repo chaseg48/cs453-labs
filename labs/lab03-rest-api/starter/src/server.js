@@ -1,4 +1,16 @@
-import express from "express";
+import express, { request } from "express";
+
+function validateRequest(req) {
+  return (req.body.name != "" && Number(req.body.quantity) >= 0);
+}
+
+function findItemId(item, req) {
+  return (item.id == Number(req.params.id));
+}
+
+function findItemName(item, req) {
+  return (item.id == Number(req.params.id));
+}
 
 export function createApp() {
   const app = express();
@@ -13,33 +25,80 @@ export function createApp() {
     { id: 2, name: "mouse", quantity: 5 }
   ];
 
+  // Returns the health of the server
   app.get("/health", (req, res) => {
     res.json({ status: "ok" });
   });
 
-  // TODO: Return all items.
+  // Returns a list of all the items
   app.get("/items", (req, res) => {
-    res.status(501).json({ error: "Not implemented yet" });
+    res.status(200).json({items: items});
   });
 
-  // TODO: Return one item by ID.
+  // Returns items based on ID
+  // Returns an error if the item ID is not found
   app.get("/items/:id", (req, res) => {
-    res.status(501).json({ error: "Not implemented yet" });
+    const result = items.find(item => findItemId(item, req));
+    if (result != undefined) {
+      res.status(200).json(result);
+    }
+    else {
+
+      res.status(404).json({ error: "Item not found" });
+    }
   });
 
-  // TODO: Create a new item.
+  // Creates a new item and adds it to the items array
+  // Increments the next item id
   app.post("/items", (req, res) => {
-    res.status(501).json({ error: "Not implemented yet" });
+    if (validateRequest(req)) {
+      let newItem = {
+        id: nextId,
+        name: String(req.body.name),
+        quantity: Number(req.body.quantity)
+      };
+      items.push(newItem);
+      nextId++;
+      res.status(201).json({msg: "Item created"});
+    }
+    else {
+      res.status(400).json({ error: "Invalid item data, item not added" });
+    }
   });
 
-  // TODO: Update an existing item.
+  // Updates an item within the items array if it exists
+  // Returns an error if the item does not exist or if the data is invalid
   app.put("/items/:id", (req, res) => {
-    res.status(501).json({ error: "Not implemented yet" });
+    if (validateRequest(req)) {
+      let index = items.findIndex(item => findItemId(item, req));
+      if (index >= 0) {
+        let updatedItem = {
+          id: req.params.id,
+          name: String(req.body.name),
+          quantity: Number(req.body.quantity)
+        }
+        items[index] = updatedItem;
+        return res.status(200).json(updatedItem);
+      }
+      else {
+        res.status(404).json({ error: "Item not found" });
+      }
+    }
+    else {
+      res.status(400).json({ error: "Invalid request" });
+    }
   });
 
-  // TODO: Delete an existing item.
+  // Deletes an item from the list
   app.delete("/items/:id", (req, res) => {
-    res.status(501).json({ error: "Not implemented yet" });
+    let index = items.findIndex(item => findItemId(item, req));
+    if (index >= 0) {
+      items.splice(index, 1);
+      res.status(204).json({ msg: "Item deleted" });
+    }
+    else {
+      res.status(404).json({ error: "Item not found" });
+    }
   });
 
   app.use((req, res) => {
