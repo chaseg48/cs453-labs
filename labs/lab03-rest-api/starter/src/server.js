@@ -1,14 +1,10 @@
 import express, { request } from "express";
 
 function validateRequest(req) {
-  return (req.body.name != "" && Number(req.body.quantity) >= 0);
+  return (typeof(req.body.name) === "string" && req.body.name != "" && Number(req.body.quantity) >= 0);
 }
 
 function findItemId(item, req) {
-  return (item.id == Number(req.params.id));
-}
-
-function findItemName(item, req) {
   return (item.id == Number(req.params.id));
 }
 
@@ -59,10 +55,10 @@ export function createApp() {
       };
       items.push(newItem);
       nextId++;
-      res.status(201).json({msg: "Item created"});
+      res.status(201).json(newItem);
     }
     else {
-      res.status(400).json({ error: "Invalid item data, item not added" });
+      res.status(400).json({ error: "Invalid request" });
     }
   });
 
@@ -73,7 +69,7 @@ export function createApp() {
       let index = items.findIndex(item => findItemId(item, req));
       if (index >= 0) {
         let updatedItem = {
-          id: req.params.id,
+          id: Number(req.params.id),
           name: String(req.body.name),
           quantity: Number(req.body.quantity)
         }
@@ -94,7 +90,7 @@ export function createApp() {
     let index = items.findIndex(item => findItemId(item, req));
     if (index >= 0) {
       items.splice(index, 1);
-      res.status(204).json({ msg: "Item deleted" });
+      res.status(204).json();
     }
     else {
       res.status(404).json({ error: "Item not found" });
